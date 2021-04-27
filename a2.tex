@@ -1,0 +1,200 @@
+\documentclass[12pt]{amsart}
+\usepackage[totalwidth=480pt, totalheight=680pt]{geometry}
+\usepackage{amsmath, amssymb, amsthm, enumerate}
+\setlength\parindent{0pt}
+\usepackage[dvips]{graphicx}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath,indentfirst,amsfonts,dsfont,amssymb,amsthm,graphicx,enumerate,mathrsfs,color,xspace,epstopdf}
+\usepackage{algorithm, algorithmic, subfigure}
+\numberwithin{equation}{section}
+
+
+
+\newcommand{\bb}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+
+\renewcommand{\O}{\mathcal{O}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\renewcommand{\mod}{\mathrm{\ mod\ }}
+\renewcommand{\(}{\left(}
+\renewcommand{\)}{\right)}
+
+\renewcommand{\[}{\left[}
+\renewcommand{\]}{\right]}
+
+
+%\renewcommand{\mod}[1]{\quad (\textrm{mod}\ #1)}
+
+\font\srm=cmr8 \font\ssi=cmti8
+\font\bigbf=cmbx12 \font\ssr=cmss8 \font\sst=cmtt8 \font\tt=cmtt10
+\font\ssb=cmbx8 \font\srm=cmr8 \font\ssi=cmti8 \font\sar=cmss12
+\font\srs=cmr6
+
+
+
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+
+\begin{document}
+\pagestyle{empty}
+
+\noindent \textbf{31.1-6} Since
+$$
+\binom pk = \frac{p(p-1)\cdots (p-k+1)}{k(k-1)\cdots 1}
+$$
+and neither of numbers $k, k-1, \ldots, 1$ is not divisible by $p$ (for $k=1,2,\ldots,p-1$), we conclude that factor $p$ cannot be canceled from the numerator of $\binom pk$ so, $p \mid \binom pk$.
+
+\medskip
+
+Now using binomial theorem, one gets
+$$
+(a+b)^p = \sum_{k=0}^p a^kb^{p-k} = a^p + \underbrace{\sum_{k=1}^{p-1} a^kb^{p-k}}_{\equiv_p0} + b^p \equiv_p a^p+b^p
+$$
+
+\bigskip
+
+\noindent \textbf{31.1-7} If $a\mid b$ then there exists positive integer $k$ such that $b=ka$. Let $s=x \mod b$ and $t=s \mod a$. Then, there exist positive integers $x'$ and $s'$ such that $x=x'b+s$ and $s=s'a+t$. Since now
+$$
+x=bx'+s = x'ka+ s'a+t = (x'k+s')a+t
+$$
+and $0\leq t < a$, we conclude that $(x \mod b)\mod a = t=x \mod a$.
+
+\smallskip
+
+Also, if $x\equiv_b y$ then $b\mid(x-y)$ and since $a\mid b$, we conclude that $a\mid (x-y)$.
+
+
+\bigskip
+
+\noindent \textbf{31.1-8} If $n=a^b$ then $b=\log_a n<\lg n < \beta$. Therefore, for each $b=2, 3, \ldots, \beta$, one can check whether there exists $a$ such that $a^b = n$.
+That can be done efficiently by binary search and recursive powering. The binary search check can be performed as follows:
+
+\begin{algorithm}[H]
+\caption{\textsc{BinarySearchCheckPower}($b, n$)}
+\begin{algorithmic}[1]
+\REQUIRE Positive integers $b$ and $n$.
+\STATE $l:=1, r:=n$
+\WHILE {$r-l>1$}
+    \STATE $m:=\lfloor(l + r)/2\rfloor$
+    \IF {$m^b>n$}
+        \STATE $r:=m$
+    \ELSE 
+        \STATE $l:=m$
+    \ENDIF
+\ENDWHILE
+\RETURN {$l^b = n$ or $r^b=n$}
+\end{algorithmic}
+\end{algorithm}
+The complexity of a single multiplication of $\beta$-bit numbers is $\O(\beta^2)$. To find $a^k$, we can use repeated squaring, i.e.
+$$
+a^k = \begin{cases}
+a & k=1,\\
+(a^l)^2 & k=2l\\
+(a^l)^2\cdot a & k=2l+1, \quad l>0
+\end{cases}
+$$
+It takes $\lg k$ multiplications, so the complexity of computing $a^k$ is $\O(\beta^2\lg\beta)$. To check whether there exists $a$ such that $a^b=n$ for fixed $b$, requires $\O(\lg b)$ powering operations, which gives the complexity $\O(\beta^2 (\lg \beta)^2)$. Finally, that checking has to be done $\beta$ times, so the total complexity is $\O(\beta^3 (\lg \beta)^2)$, which is polynomial in $\beta$.
+
+
+\bigskip
+
+\noindent \textbf{31.2-3} Let $x$ be any common divisor of $a$ and $n$. Then $a=a'x$ and $n=n'x$ for some positive integers $a'$ and $n'$ and $a+kn = a'x+kn'x = (a'+kn')x$ so $x\mid a+kn$.
+
+On the other hand, let $x$ be any common divisor of $a+kn$ and $n$. Then $a=a'x$ and $a+kn=cx$ for some positive integers $n'$ and $c$, and therefore $a = cx - kn = cx-kn'x=(c-kn')x$, implying that $x\mid a$.
+
+This proves that the sets of common positive divisors of $a$ and $n$, and $a+kn$ and $n$, are equal. Then so are it's maximal elements, i.e. $\gcd(a,n)=\gcd(a+kn,n)$.
+
+
+\bigskip
+
+
+\noindent \textbf{31.2-4}
+
+\begin{algorithm}[H]
+\caption{\textsc{Euclid}($a,b$)}
+\begin{algorithmic}[1]
+\REQUIRE Positive integers $a$ and $b$.
+\WHILE {$b>0$}
+    \STATE $r:=a \mod b$
+    \STATE $a:=b$
+    \STATE $b:=r$
+\ENDWHILE
+\STATE \textbf{return} $a$
+\end{algorithmic}
+\end{algorithm}
+
+
+\bigskip
+
+\noindent \textbf{31.2-6} It returns $(1, (-1)^{k+1}F_{k-2}, (-1)^kF_{k-1})$. We will prove this by mathematical induction. If we define $F_{-1}:=1$ then $F_1 = F_0 + F_{-1} = 0+1 = 1$ and hence, the Fibonacci property holds. In the case $k=1$, the tuple is $(1, 1, 0) = (1, (-1)^2F_{-1}, (-1)^1 F_0)$, by the definition of the $b=0$ case of \textsc{Extended-Euclid}. Assume that the statement is correct for $k-1$. Then since $F_{k+1}=F_k+F_{k-1}$, taking $a=F_{k+1}$ and $b=F_k$, one finds that $a \mod b = F_{k-1}$, so the recursive call in step 3 is $\textsc{Extended-Euclid}(F_k, F_{k-1})$ and $\lfloor a/b \rfloor = \lfloor F_{k+1}/F_k \rfloor=1$. By induction hypothesis, it returns the tuple $(d', x', y') = (1, (-1)^{k}F_{k-3}, (-1)^{k-1}F_{k-2})$. Then
+$$
+\aligned
+d &= d' = 1\\
+x &= y' = (-1)^{k-1}F_{k-2} = (-1)^{k+1}F_{k-2}\\
+y &= x' - \lfloor a/b\rfloor y' = (-1)^{k}F_{k-3} - \lfloor F_{k+1}/F_k \rfloor (-1)^{k-1}F_{k-2} \\
+&= (-1)^{k} (F_{k-3} + F_{k-2}) = (-1)^{k} F_{k-1}
+\endaligned
+$$
+which completes the proof by induction.
+
+
+\bigskip
+
+
+\noindent \textbf{31.3-1}
+$$
+\begin{array}{c|cccc}
+  (\Z_4,+_4) & 0 & 1 & 2 & 3 \\
+  \hline
+  0 & 0 & 1 & 2 & 3 \\
+  1 & 1 & 2 & 3 & 0 \\
+  2 & 2 & 3 & 0 & 1 \\
+  3 & 3 & 0 & 1 & 2
+\end{array} \qquad
+\begin{array}{c|cccc}
+  (\Z^*_5,+_5)
+    & 1 & 2 & 3 & 4 \\
+  \hline
+  1 & 1 & 2 & 3 & 4 \\
+  2 & 2 & 4 & 1 & 3 \\
+  3 & 3 & 1 & 4 & 2 \\
+  4 & 4 & 3 & 2 & 1
+\end{array}
+$$
+
+Define $\alpha(x)=2^x \mod 5$ for $x \in \Z_4$. Then
+$$
+\alpha(x)\cdot_5\alpha(y) = (2^x \mod 5)\cdot (2^y \mod 5) \mod 5 = 2^{x+y} \mod 5
+$$
+Let $x+y=4k+z$ where $z = x+_4y = x+y \mod 4$ and $k$ is positive integer. Since $2^4=16 \mod 5=1$, we have
+$$
+\alpha(x)\cdot_5\alpha(y) = 2^{4k+z} \mod 5 = (2^4)^k \cdot 2^z \mod 5 = 2^z \mod 5 = \alpha(z) = \alpha(x+_4y).
+$$
+Moreover, since $\alpha(0)=1$, $\alpha(1)=2$, $\alpha(2)=4$, $\alpha(3)=3$, we conclude that $\alpha : \Z_4 \to \Z^*_5$ is required isomorphism.
+
+
+\bigskip
+
+\noindent \textbf{31.3-2} Since $\Z_9$ is commutative cyclic group, according to Lagrange theorem, it's proper non-trivial subgroup must be of order $3$, i.e. it's $[3]=\{0,3,6\}$ (equipped with $+_9$). The other two are $[0]$ and $\Z_9$ itself.
+
+\smallskip
+
+On the other hand, $\Z^*_{13}$ is of the order $12$. According to the same Lagrange theorem, it's subgroups have orders $1,2,3,4,6,12$. Therefore, the subgroups are $[1] = \{1\}$, $[3] = \{1, 3, 9\}$, $[4] = \{1, 3, 4, 9, 10, 12\}$, $[5] = \{1, 5, 8, 12\}$, $[12] =\{1, 12\}$ and $\Z^*_{13}$.
+
+\bigskip
+
+\noindent \textbf{31.3-3} To prove that $(S',\oplus)$ is group, we only need to prove that $0\in S'$ and that for each $a\in S'$ has it's inverse $a' \in S'$. Let $a\in S'$ be arbitrary element and define $\alpha(x) = a\oplus x$, for $x\in S'$. According to the assumption, $\alpha(S') \subseteq S'$ and hence $\alpha(x) = \alpha(y)$ implies $a\oplus x = a \oplus y$ which further implies $x=y$ ($S$ is group). Therefore $\alpha : S' \to S'$ is bijection and hence, there exists $e\in S'$ such that $a=\alpha(e)=a\oplus e$. It implies that $e=0\in S'$. In the same manner, there exists $a' \in S'$ such that $0=\alpha(a') = a\oplus a'$, i.e. an inverse element of $a$ is in $S'$.
+
+\bigskip
+
+\noindent \textbf{31.3-4} Since $\phi(x)$ is the number of integers $1\leq a < x$ which are relatively prime to $x$. Integer $a$ is relatively prime to $p^e$ if and only if $p \nmid a$. Since every $p$-th integer is divisible by $p$, the total number of integers $1\leq a <p^e$ is $p^{e-1}$. Therefore $\phi(p^e)=p^e-p^{e-1}=p^{e-1}(p-1)$.
+
+\bigskip
+
+\noindent \textbf{31.3-5} Since obviously $f_a(x)\in \Z_n^*$, to show that $f_a$ is the permutation it is sufficient to show that it is $1-1$, i.e. that $f_a(x) = f_a(y)$ implies $x=y$. Since $f_a(x) = f_a(y)$ implies $ax \equiv_n ay$ which further implies $n\mid ax-ay=a(x-y)$. The fact that $a$ and $n$ are relatively prime implies $n\mid x-y$. If $x\neq y$ then $n\mid x-y$ leading to $|x-y|\geq n$ which is contradiction, since $x, y\in {1,2,\ldots,n-1}$. Therefore, $x=y$ and $f_a$ is $1-1$ and hence a bijection. Since the domain and codomain of $f_a$ are the same (i.e. $\Z_N^*$) we conclude that $f_a$ is permutation of $\Z_n^*$.
+
+
+
+
+\end{document} 
